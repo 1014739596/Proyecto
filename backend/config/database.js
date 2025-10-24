@@ -63,7 +63,7 @@ router.delete('/:id', (req, res) => {
             console.error('Error al eliminar usuario:', err);
             return res.status(500).json({ error: 'Error al eliminar usuario' });
         }
-        res.json({ message: 'Usuario eliminado correctamente' });
+        res.json({ message: 'usuario eliminado correctamente' });
     });
 });
 
