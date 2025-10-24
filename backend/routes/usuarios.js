@@ -1,71 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../config/database');
+const mysql = require('mysql2');
 
-// Listar todos los usuarios
-router.get('/', (req, res) => {
-  const query = 'SELECT * FROM usuarios ORDER BY id DESC';
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error al obtener usuarios:', err);
-      return res.status(500).json({ error: 'Error al obtener usuarios' });
-    }
-    res.json(results);
-  });
+const connection = mysql.createConnection({
+host: 'localhost',
+user: 'root',
+password: '',
+database: 'usuarios_app'
 });
 
-// Crear usuario
-router.post('/', (req, res) => {
-  const { nombre, email, telefono } = req.body;
-  const query = 'INSERT INTO usuarios (nombre, email, telefono) VALUES (?, ?, ?)';
-  db.query(query, [nombre, email, telefono], (err, result) => {
-    if (err) {
-      console.error('Error al crear usuario:', err);
-      return res.status(500).json({ error: 'Error al crear usuario' });
-    }
-    res.json({ id: result.insertId, nombre, email, telefono });
-  });
+connection.connect((err) => {
+if (err) {
+console.error('Error conectando a la base de datos:',
+err);
+return;
+}
+console.log('✅ Conectado a MySQL');
 });
 
-
-// Listar usuario por id
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const query = 'SELECT * FROM usuarios WHERE id = ?';
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error('Error al obtener usuario:', err);
-      return res.status(500).json({ error: 'Error al obtener usuario' });
-    }
-    res.json(result[0]);
-  });
-});
-
-// Actualizar usuario
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const { nombre, email, telefono } = req.body;
-  const query = 'UPDATE usuarios SET nombre=?, email=?, telefono=? WHERE id=?';
-  db.query(query, [nombre, email, telefono, id], (err) => {
-    if (err) {
-      console.error('Error al actualizar usuario:', err);
-      return res.status(500).json({ error: 'Error al actualizar usuario' });
-    }
-    res.json({ message: 'Usuario actualizado correctamente' });
-  });
-});
-
-// Eliminar usuario
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  const query = 'DELETE FROM usuarios WHERE id = ?';
-  db.query(query, [id], (err) => {
-    if (err) {
-      console.error('Error al eliminar usuario:', err);
-      return res.status(500).json({ error: 'Error al eliminar usuario' });
-    }
-    res.json({ message: 'Usuario eliminado correctamente' });
-  });
-});
-
-module.exports = router;
+module.exports = connection;
