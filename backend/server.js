@@ -16,7 +16,7 @@ res.json({ message: 'API de Usuarios funcionando correctamente' });
 });
 
 app.listen(PORT, () => {
-console.log(`🚀 Servidor corriendo en
+console.log(`🚀 Servidor  corriendo en
 http://localhost:${PORT}`);
 });
 
